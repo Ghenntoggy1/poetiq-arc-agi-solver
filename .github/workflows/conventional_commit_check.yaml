@@ -5,9 +5,8 @@ on:
     types: [opened, edited, synchronize]
 
 jobs:
-  check-conventional-commits-naming:
+  check-conventional-commit-naming:
     runs-on: ubuntu-latest
     steps:
-      - name: check-conventional-commits-naming
-        id: check-conventional-commits-naming
-        uses: agenthunt/conventional-commit-checker-action@v2.0.1
+      - uses: actions/checkout@v4
+      - uses: webiny/action-conventional-commits@v1.0.3
