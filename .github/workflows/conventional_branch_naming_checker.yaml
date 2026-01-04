@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+jobs:
+  check-conventional-branch-naming:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: check-conventional-branch-naming
+        id: check-conventional-branch-naming
+        run: |
+          # The branch name is available in the 'github.head_ref' context variable
+          BRANCH_NAME="${{ github.head_ref }}"
+          
+          REGEX="^(main|((feat|feature|bugfix|fix|hotfix|release|chore)\/[a-zA-Z0-9._-]+))$"
+          
+          if [[ $BRANCH_NAME =~ $REGEX ]]; then
+              echo "Branch name '$BRANCH_NAME' is valid according to GitFlow."
+              exit 0
+          else
+              echo "Error: Branch name '$BRANCH_NAME' does not follow GitFlow conventions."
+              echo "Valid branch names are 'main' or prefixed with 'feat/', 'feature/', 'bugfix/', 'fix/', 'hotfix/', 'release/' or 'chore/'."
+              exit 1
+          fi
