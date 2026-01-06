@@ -20,8 +20,8 @@ Our method is now on top of the official leaderboard. More information is in our
 You can recreate the Gemini 3 points from these charts using this repo.
 
 <p align="center">
-  <img src="arcagi1.png" width="45%" />
-  <img src="arcagi2.png" width="45%" />
+  <img alt="ARC-AGI-1 Public Eval Score" src=".assets/images/arcagi1.png" width="45%" />
+  <img alt="ARC-AGI-2 Public Eval Score" src=".assets/images/arcagi2.png" width="45%" />
 </p>
 
 ## 📊 Official Private Eval Results
@@ -29,10 +29,10 @@ You can recreate the Gemini 3 points from these charts using this repo.
 These are our results on the official leaderboard from ARC Prize, but those problems are kept private.
 
 <p align="center">
-  <img src="officialtable_boxed.png" width="755%" />
+  <img alt="ARC-Prize Official Table" src=".assets/images/officialtable_boxed.png" width="755%" />
 </p>
 <p align="center">
-  <img src="arc2captured.png" width="60%" />
+  <img alt="ARC-AGI-2 Semi-Private Score" src=".assets/images/arc2captured.png" width="60%" />
 </p>
 
 ## 🛠️ Usage
