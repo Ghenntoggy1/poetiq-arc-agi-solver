@@ -55,9 +55,23 @@ async def solve_coding(
     solutions: list[ARCAGISolution] = []
 
     for it in range(max_iterations):
+        
+        # =========== DEBUG PRINT START ===========
+        print(f"ITERATION: {it}")
+        print("=" * 50)
+        # =========== DEBUG PRINT END ===========
+        
         example = _make_example(train_in, train_out, test_in)
         problem_str = format_problem(example, shuffle_examples, seed + it)
         message = _build_prompt(solver_prompt, problem=problem_str)
+        
+        # =========== DEBUG START ===========
+        print(f"EXAMPLE PROBLEM:\n{example}")
+        print("=" * 50)
+        print(f"PROBLEM:\n{problem_str}")
+        print("=" * 50)
+        print(f"MESSAGE:\n{message}")
+        # =========== DEBUG END ===========
 
         selected = []
         if solutions:
@@ -70,6 +84,11 @@ async def solve_coding(
             )
             message += "\n\n" + _build_prompt(feedback_prompt, feedback=examples_block)
 
+        # =========== DEBUG PRINT START ===========
+        print(f"NEW MESSAGE:\n{message}")
+        print("=" * 50)
+        # =========== DEBUG PRINT END ===========
+        
         try:
             response, duration, max_total_time, max_total_timeouts, prompt_tokens, completion_tokens = await llm(
                 llm_model,
@@ -83,6 +102,26 @@ async def solve_coding(
             )
             total_prompt_tokens += prompt_tokens
             total_completion_tokens += completion_tokens
+            
+            # =========== DEBUG PRINT START ===========
+            print(f"RESPONSE:\n{response}")
+            print("=" * 50)
+            print(f"DURATION:\n{duration}")
+            print("=" * 50)
+            print(f"TOTAL TIME:\n{max_total_time}")
+            print("=" * 50)
+            print(f"TOTAL TIMEOUTS:\n{max_total_timeouts}")
+            print("=" * 50)
+            print(f"PROMPT TOKENS:\n{prompt_tokens}")
+            print("=" * 50)
+            print(f"COMPLETION TOKENS:\n{completion_tokens}")
+            print("=" * 50)
+            print(f"TOTAL PROMPT TOKENS:\n{total_prompt_tokens}")
+            print("=" * 50)
+            print(f"TOTAL COMPLETION TOKENS:\n{total_completion_tokens}")
+            print("=" * 50)
+            # =========== DEBUG PRINT END ===========
+            
         except Exception as e:
             if "Exceeded timeouts allotted to the request" in str(e) or "Exceeded time allotted to the request" in str(e):
                 # Exceeded max_remaining_timeouts or max_remaining_time

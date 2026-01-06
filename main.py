@@ -1,7 +1,7 @@
 import asyncio
 import json
 import os
-import resource
+import platform
 import time
 import traceback
 from datetime import datetime
@@ -30,8 +30,8 @@ OUTPUT = os.path.join(OUTPUT_DIR, f"submission_{TIMESTAMP}.json")
 
 # number of problems (None = all)
 NUM_PROBLEMS = None
-# select particular problems
-SELECTED_PROBLEMS = [] # e.g. ['b7999b51']
+# select particular problems (WILL RUN ONLY THE SELECTED PROBLEMS, NOT ENTIRE DATASET)
+SELECTED_PROBLEMS = ['b7999b51'] # e.g. ['b7999b51']
 
 
 async def _eval_task_data(task_id: str, task: dict) -> tuple[str, Optional[list[dict]], Optional[dict], Optional[str], float]:
@@ -63,12 +63,15 @@ async def _eval_task_data(task_id: str, task: dict) -> tuple[str, Optional[list[
 
 
 async def main():
-    # Ensure we don't run out of file handles
-    # Get current soft and hard limits
-    soft, hard = resource.getrlimit(resource.RLIMIT_NOFILE)
-    # Set a new soft limit (cannot exceed hard limit)
-    new_soft = 65536
-    resource.setrlimit(resource.RLIMIT_NOFILE, (new_soft, hard))
+    if platform.system() == "Linux":
+        import resource
+        
+        # Ensure we don't run out of file handles
+        # Get current soft and hard limits
+        soft, hard = resource.getrlimit(resource.RLIMIT_NOFILE)
+        # Set a new soft limit (cannot exceed hard limit)
+        new_soft = 65536
+        resource.setrlimit(resource.RLIMIT_NOFILE, (new_soft, hard))
 
     os.makedirs(os.path.dirname(OUTPUT), exist_ok=True)
 

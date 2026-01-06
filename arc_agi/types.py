@@ -1,15 +1,19 @@
 from typing import Literal, Optional, TypedDict
 
 Models = Literal[
-    "groq/openai/gpt-oss-120b",
-    "openai/gpt-5",
-    "openai/gpt-5.1",
-    "xai/grok-4-fast",
-    "xai/grok-4",
-    "anthropic/claude-sonnet-4-5",
-    "anthropic/claude-haiku-4-5",
-    "gemini/gemini-2.5-pro",
-    "gemini/gemini-3-pro-preview",
+    # POETIQ LLMs
+    # "groq/openai/gpt-oss-120b",
+    # "openai/gpt-5",
+    # "openai/gpt-5.1",
+    # "xai/grok-4-fast",
+    # "xai/grok-4",
+    # "anthropic/claude-sonnet-4-5",
+    # "anthropic/claude-haiku-4-5",
+    # "gemini/gemini-2.5-pro",
+    # "gemini/gemini-3-pro-preview",
+    
+    # SLMs
+    "openrouter/nvidia/nemotron-3-nano-30b-a3b"
 ]
 
 

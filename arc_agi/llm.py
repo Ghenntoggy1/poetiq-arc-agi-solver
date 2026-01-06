@@ -7,6 +7,7 @@ from litellm import acompletion
 from litellm import exceptions as litellm_exceptions
 
 from arc_agi.types import Models
+from arc_agi.config import API_KEY
 
 # Silence unnecessary litellm logs.
 litellm.suppress_debug_info = True
@@ -15,6 +16,7 @@ RETRIES = 3
 RETRY_DELAY_SEC = 5
 
 limiters: dict[Models, Limiter] = {
+    # POETIQ LLMs
     "groq/openai/gpt-oss-120b": Limiter(1.0),
     "openai/gpt-5": Limiter(1.0),
     "openai/gpt-5.1": Limiter(1.0),
@@ -24,9 +26,13 @@ limiters: dict[Models, Limiter] = {
     "anthropic/claude-haiku-4-5": Limiter(1.0),
     "gemini/gemini-2.5-pro": Limiter(2.0),
     "gemini/gemini-3-pro-preview": Limiter(1.0),
+    
+    # SLMs
+    "openrouter/meta-llama/llama-3.2-3b-instruct": Limiter(1.0),
 }
 
 props: dict[Models, dict] = {
+    # POETIQ LLMs
     "groq/openai/gpt-oss-120b": {},
     "openai/gpt-5": {"reasoning_effort": "high"},
     "openai/gpt-5.1": {"reasoning_effort": "high"},
@@ -36,6 +42,9 @@ props: dict[Models, dict] = {
     "anthropic/claude-haiku-4-5": {"thinking": {"type": "enabled", "budget_tokens": 32_000}},
     "gemini/gemini-2.5-pro": {"thinking": {"type": "enabled", "budget_tokens": 16_000}},
     "gemini/gemini-3-pro-preview": {},
+    
+    # SLMs
+    "openrouter/meta-llama/llama-3.2-3b-instruct": {},
 }
 
 
@@ -61,9 +70,11 @@ async def llm(
         try:
             resp: Any = await acompletion(
                 model=model,
+                # base_url="https://openrouter.ai/api/v1",
                 messages=[{"role": "user", "content": message}],
                 temperature=temperature,
                 timeout=current_request_timeout,
+                api_key=API_KEY,
                 num_retries=0,
                 **props[model],
             )
