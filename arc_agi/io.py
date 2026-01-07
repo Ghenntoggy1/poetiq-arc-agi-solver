@@ -43,7 +43,7 @@ def build_kaggle_two_attempts(results: list[ARCAGIResult], test_in: List[List[Li
 
         # Sweep iterations in order; collect up to 2 successful outputs for test j
         for ar in results:
-            tr = ar.get("results", [])
+            tr = ar.get("test_results", [])
             if j < len(tr):
                 rr = tr[j]
                 grid = _coerce_grid(rr.get("output", []))

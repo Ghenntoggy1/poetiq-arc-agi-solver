@@ -53,7 +53,7 @@ async def solve_parallel_coding(
 
     for res in results:
         is_passer = all(rr.get("success", False) for rr in res.get("train_results", []))
-        key = canonical_test_key(res.get("results", []))
+        key = canonical_test_key(res.get("test_results", []))
         if is_passer:
             candidate_buckets.setdefault(key, []).append(res)
         else:

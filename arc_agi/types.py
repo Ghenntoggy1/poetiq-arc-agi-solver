@@ -1,7 +1,9 @@
 from typing import Literal, Optional, TypedDict
 
+# List of pre-defined models that can be used as models for the system.
 Models = Literal[
     # POETIQ LLMs
+    
     # "groq/openai/gpt-oss-120b",
     # "openai/gpt-5",
     # "openai/gpt-5.1",
@@ -13,9 +15,9 @@ Models = Literal[
     # "gemini/gemini-3-pro-preview",
     
     # SLMs
-    "openrouter/nvidia/nemotron-3-nano-30b-a3b"
+    
+    "openrouter/meta-llama/llama-3.2-3b-instruct"
 ]
-
 
 class ExpertConfig(TypedDict):
     use_new_voting: bool
@@ -58,7 +60,7 @@ class RunResult(TypedDict):
 
 class ARCAGIResult(TypedDict):
     train_results: list[RunResult]
-    results: list[RunResult]  # test results
+    test_results: list[RunResult]
     iteration: int
     prompt_tokens: Optional[int]
     completion_tokens: Optional[int]
