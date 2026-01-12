@@ -13,25 +13,34 @@ from arc_agi.config import CONFIG_LIST
 from arc_agi.io import build_kaggle_two_attempts
 from arc_agi.scoring import score_task
 from arc_agi.solve import solve
+from arc_agi.types import ARCPrizeDatasetEnum, ARCPrizeIterationEnum
 
 load_dotenv()
 
 
-# time the run started, so multiple runs don't collide
+# Time the run started, so multiple runs don't collide
 TIMESTAMP = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
-# challenge input file
-DATA_CHALLENGES = os.path.join(os.path.dirname(__file__), "data", "arc-prize-2024", "arc-agi_evaluation_challenges.json")
-# optional challenge solution file
-DATA_SOLUTIONS = os.path.join(os.path.dirname(__file__), "data", "arc-prize-2024", "arc-agi_evaluation_solutions.json")
-# where to write outputs
+# ARC-PRIZE iteration
+ARC_PRIZE_ITERATION = ARCPrizeIterationEnum.ARC_AGI_2.value
+
+# ARC-PRIZE dataset type
+ARC_PRIZE_DATASET_TYPE = ARCPrizeDatasetEnum.EVALUATION.value
+
+# Challenge input file
+DATA_CHALLENGES = os.path.join(os.path.dirname(__file__), "data", ARC_PRIZE_ITERATION, f"arc-agi_{ARC_PRIZE_DATASET_TYPE}_challenges.json")
+
+# Optional challenge solution file
+DATA_SOLUTIONS = os.path.join(os.path.dirname(__file__), "data", ARC_PRIZE_ITERATION, f"arc-agi_{ARC_PRIZE_DATASET_TYPE}_solutions.json")
+
+# Where to write outputs
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "output")
 OUTPUT = os.path.join(OUTPUT_DIR, f"submission_{TIMESTAMP}.json")
 
 # number of problems (None = all)
-NUM_PROBLEMS = None
+NUM_PROBLEMS = 1
 # select particular problems (WILL RUN ONLY THE SELECTED PROBLEMS, NOT ENTIRE DATASET)
-SELECTED_PROBLEMS = ['b7999b51'] # e.g. ['b7999b51']
+SELECTED_PROBLEMS = [] # e.g. ['b7999b51']
 
 
 async def _eval_task_data(task_id: str, task: dict) -> tuple[str, Optional[list[dict]], Optional[dict], Optional[str], float]:

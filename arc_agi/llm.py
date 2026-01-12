@@ -6,8 +6,8 @@ from asynciolimiter import Limiter
 from litellm import acompletion
 from litellm import exceptions as litellm_exceptions
 
-from arc_agi.types import Models
 from arc_agi.config import API_KEY
+from arc_agi.types import Models
 
 # Silence unnecessary litellm logs.
 litellm.suppress_debug_info = True
@@ -28,7 +28,12 @@ limiters: dict[Models, Limiter] = {
     "gemini/gemini-3-pro-preview": Limiter(1.0),
     
     # SLMs
-    "openrouter/meta-llama/llama-3.2-3b-instruct": Limiter(1.0),
+    "openrouter/openai/gpt-oss-120b": Limiter(1.0),
+    "openrouter/openai/gpt-oss-20b": Limiter(1.0),
+    "openrouter/ibm-granite/granite-4.0-h-micro": Limiter(1.0),
+    "openrouter/deepseek/deepseek-r1-0528-qwen3-8b": Limiter(1.0),
+    "openrouter/liquid/lfm2-8b-a1b": Limiter(1.0),
+    "openrouter/baidu/ernie-4.5-21b-a3b-thinking": Limiter(1.0),
 }
 
 props: dict[Models, dict] = {
@@ -44,7 +49,12 @@ props: dict[Models, dict] = {
     "gemini/gemini-3-pro-preview": {},
     
     # SLMs
-    "openrouter/meta-llama/llama-3.2-3b-instruct": {},
+    "openrouter/openai/gpt-oss-120b": {},
+    "openrouter/openai/gpt-oss-20b": {},
+    "openrouter/ibm-granite/granite-4.0-h-micro": {},
+    "openrouter/deepseek/deepseek-r1-0528-qwen3-8b": {},
+    "openrouter/liquid/lfm2-8b-a1b": {},
+    "openrouter/baidu/ernie-4.5-21b-a3b-thinking": {},
 }
 
 
@@ -70,7 +80,6 @@ async def llm(
         try:
             resp: Any = await acompletion(
                 model=model,
-                # base_url="https://openrouter.ai/api/v1",
                 messages=[{"role": "user", "content": message}],
                 temperature=temperature,
                 timeout=current_request_timeout,

@@ -7,14 +7,20 @@ import numpy as np
 
 from arc_agi.llm import llm
 from arc_agi.sandbox import run
-from arc_agi.types import ARCAGIResult, ARCAGISolution, ExpertConfig, RunResult
+from arc_agi.types import (
+    ARCAGIGrid,
+    ARCAGIResult,
+    ARCAGISolution,
+    ExpertConfig,
+    RunResult,
+)
 
 
 async def solve_coding(
     *,
-    train_in: list[list[list[int]]],
-    train_out: list[list[list[int]]],
-    test_in: list[list[list[int]]],
+    train_in: list[ARCAGIGrid],
+    train_out: list[ARCAGIGrid],
+    test_in: list[ARCAGIGrid],
     config: ExpertConfig,
     problem_id: str | None = None,
 ) -> ARCAGIResult:
@@ -56,22 +62,19 @@ async def solve_coding(
 
     for it in range(max_iterations):
         
-        # =========== DEBUG PRINT START ===========
-        print(f"ITERATION: {it}")
+        # # =========== DEBUG PRINT START ===========
+        print(f"ITERATION: {it + 1}")
         print("=" * 50)
-        # =========== DEBUG PRINT END ===========
+        # # =========== DEBUG PRINT END ===========
         
         example = _make_example(train_in, train_out, test_in)
         problem_str = format_problem(example, shuffle_examples, seed + it)
         message = _build_prompt(solver_prompt, problem=problem_str)
         
-        # =========== DEBUG START ===========
-        print(f"EXAMPLE PROBLEM:\n{example}")
-        print("=" * 50)
-        print(f"PROBLEM:\n{problem_str}")
-        print("=" * 50)
-        print(f"MESSAGE:\n{message}")
-        # =========== DEBUG END ===========
+        # # =========== DEBUG START ===========
+        # print(f"PROBLEM:\n{problem_str}")
+        # print("=" * 50)
+        # # =========== DEBUG END ===========
 
         selected = []
         if solutions:
@@ -84,10 +87,10 @@ async def solve_coding(
             )
             message += "\n\n" + _build_prompt(feedback_prompt, feedback=examples_block)
 
-        # =========== DEBUG PRINT START ===========
-        print(f"NEW MESSAGE:\n{message}")
-        print("=" * 50)
-        # =========== DEBUG PRINT END ===========
+        # # =========== DEBUG PRINT START ===========
+        # print(f"NEW MESSAGE:\n{message}")
+        # print("=" * 50)
+        # # =========== DEBUG PRINT END ===========
         
         try:
             response, duration, max_total_time, max_total_timeouts, prompt_tokens, completion_tokens = await llm(
@@ -143,7 +146,7 @@ async def solve_coding(
         if all(r["success"] for r in train_res):
             return ARCAGIResult(
                 train_results=train_res,
-                results=test_res,
+                test_results=test_res,
                 iteration=it + 1,
                 prompt_tokens=total_prompt_tokens,
                 completion_tokens=total_completion_tokens,
@@ -152,11 +155,18 @@ async def solve_coding(
         feedback, score = _build_feedback(train_res, train_in, train_out)
         solutions.append(ARCAGISolution(code=code, feedback=feedback, score=score))
 
+        # =========== DEBUG PRINT START ===========
+        print(f"FEEDBACK:\n{feedback}")
+        print("=" * 50)
+        print(f"TRAINING EXAMPLES SCORE:\n{score}")
+        print("=" * 50)
+        # =========== DEBUG PRINT END ===========
+        
         if score >= best_train_score:
             best_train_score = score
             best_result = ARCAGIResult(
                 train_results=train_res,
-                results=test_res,
+                test_results=test_res,
                 iteration=it + 1,
                 prompt_tokens=None,
                 completion_tokens=None,
@@ -178,7 +188,7 @@ async def solve_coding(
         ]
     return ARCAGIResult(
         train_results=last_train,
-        results=last_test,
+        test_results=last_test,
         iteration=max_iterations,
         prompt_tokens=total_prompt_tokens,
         completion_tokens=total_completion_tokens,
@@ -220,6 +230,13 @@ $score
                 score=f"{e['score']:.2f}",
             )
         )
+    
+    # =========== DEBUG PRINT START ===========
+    print("SOLUTIONS EXAMPLES:\n")
+    print('\n'.join(blocks))
+    print("=" * 50)
+    # =========== DEBUG PRINT END ===========
+    
     return "\n".join(blocks)
 
 
@@ -320,7 +337,7 @@ Input:
     return example_str + challenge_str
 
 
-def _example_to_diagram(example: list[list[int]] | np.ndarray) -> str:
+def _example_to_diagram(example: ARCAGIGrid | np.ndarray) -> str:
     """Converts an ARC-AGI example (list of lists) to a diagram (ascii grid)."""
     diagram = ""
     for row in example:
@@ -331,9 +348,9 @@ def _example_to_diagram(example: list[list[int]] | np.ndarray) -> str:
 
 async def _eval_on_train_and_test(
     code: str,
-    train_in: list[list[list[int]]],
-    train_out: list[list[list[int]]],
-    test_in: list[list[list[int]]],
+    train_in: list[ARCAGIGrid],
+    train_out: list[ARCAGIGrid],
+    test_in: list[ARCAGIGrid],
     *,
     timeout_s: float = 1.5,
 ) -> tuple[list[RunResult], list[RunResult]]:
