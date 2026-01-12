@@ -1,3 +1,4 @@
+from enum import StrEnum, auto
 from typing import Literal, Optional, TypedDict
 
 # List of pre-defined models that can be used as models for the system.
@@ -16,7 +17,12 @@ Models = Literal[
     
     # SLMs
     
-    "openrouter/meta-llama/llama-3.2-3b-instruct"
+    "openrouter/openai/gpt-oss-120b",
+    "openrouter/openai/gpt-oss-20b",
+    "openrouter/ibm-granite/granite-4.0-h-micro",
+    "openrouter/deepseek/deepseek-r1-0528-qwen3-8b",
+    "openrouter/liquid/lfm2-8b-a1b",
+    "openrouter/baidu/ernie-4.5-21b-a3b-thinking",
 ]
 
 class ExpertConfig(TypedDict):
@@ -70,3 +76,14 @@ class ARCAGISolution(TypedDict):
     code: str
     feedback: str
     score: float
+
+ARCAGIGrid = list[list[int]]
+
+class ARCPrizeIterationEnum(StrEnum):
+    ARC_AGI_1 = "arc-prize-2024"
+    ARC_AGI_2 = "arc-prize-2025"
+    
+class ARCPrizeDatasetEnum(StrEnum):
+    TRAINING = auto()  # resolves to "training"
+    EVALUATION = auto()  # resolves to "evaluation"
+    TEST = auto()  # resolves to "test"

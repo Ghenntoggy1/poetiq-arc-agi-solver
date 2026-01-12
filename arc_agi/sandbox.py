@@ -5,8 +5,11 @@ import sys
 import tempfile
 import textwrap
 
+from arc_agi.types import ARCAGIGrid
+
+
 async def run(
-    code: str, input_grid: list[list[int]], timeout_s: float = 1.5
+    code: str, input_grid: ARCAGIGrid, timeout_s: float = 1.5
 ) -> tuple[bool, str]:
     """Run user code in a subprocess asynchronously, returning (ok, result or error)."""
     script = _build_script(code)

@@ -1,12 +1,12 @@
 from arc_agi.config import CONFIG_LIST
 from arc_agi.solve_parallel_coding import solve_parallel_coding
-from arc_agi.types import ARCAGIResult
+from arc_agi.types import ARCAGIGrid, ARCAGIResult
 
 
 async def solve(
-    train_in: list[list[list[int]]],
-    train_out: list[list[list[int]]],
-    test_in: list[list[list[int]]],
+    train_in: list[ARCAGIGrid],
+    train_out: list[ARCAGIGrid],
+    test_in: list[ARCAGIGrid],
     problem_id: str | None = None,
 ) -> list[ARCAGIResult]:
     result = await solve_parallel_coding(

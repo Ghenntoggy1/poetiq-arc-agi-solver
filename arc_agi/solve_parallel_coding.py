@@ -3,15 +3,15 @@ import asyncio
 import numpy as np
 
 from arc_agi.solve_coding import solve_coding
-from arc_agi.types import ARCAGIResult, ExpertConfig
+from arc_agi.types import ARCAGIGrid, ARCAGIResult, ExpertConfig
 from arc_agi.utils import canonical_test_key
 
 
 async def solve_parallel_coding(
     *,
-    train_in: list[list[list[int]]],
-    train_out: list[list[list[int]]],
-    test_in: list[list[list[int]]],
+    train_in: list[ARCAGIGrid],
+    train_out: list[ARCAGIGrid],
+    test_in: list[ARCAGIGrid],
     expert_configs: list[ExpertConfig],
     problem_id: str | None = None,
 ) -> list[ARCAGIResult]:

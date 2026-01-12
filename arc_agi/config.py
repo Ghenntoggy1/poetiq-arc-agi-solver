@@ -13,9 +13,12 @@ from arc_agi.types import ExpertConfig, Models
 API_KEY: str = os.getenv(key="OPENROUTER_API_KEY")
 
 SLM_MAPPING: dict[Models, int] = {
+    # "openrouter/openai/gpt-oss-120b": 1,
+    "openrouter/openai/gpt-oss-20b": 1,
+    # "openrouter/ibm-granite/granite-4.0-h-micro": 1,
+    # "openrouter/deepseek/deepseek-r1-0528-qwen3-8b": 1,
     # "openrouter/liquid/lfm2-8b-a1b": 1,
-    # "openrouter/openai/gpt-oss-20b": 1,
-    "openrouter/baidu/ernie-4.5-21b-a3b-thinking": 1,
+    # "openrouter/baidu/ernie-4.5-21b-a3b-thinking": 1,
 }
 
 CONFIG_LIST: list[ExpertConfig] = []

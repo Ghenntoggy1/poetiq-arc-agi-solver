@@ -1,7 +1,7 @@
 import json
 from typing import Any, List
 
-from arc_agi.types import ARCAGIResult
+from arc_agi.types import ARCAGIGrid, ARCAGIResult
 
 
 def _coerce_grid(x: Any) -> list:
@@ -31,7 +31,7 @@ def _coerce_grid(x: Any) -> list:
     return []
 
 
-def build_kaggle_two_attempts(results: list[ARCAGIResult], test_in: List[List[List[int]]]):
+def build_kaggle_two_attempts(results: list[ARCAGIResult], test_in: List[ARCAGIGrid]):
     """
     Returns: List[{"attempt_1": grid, "attempt_2": grid}] with len == len(test_in).
     """
